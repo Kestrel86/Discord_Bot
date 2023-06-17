@@ -3,8 +3,6 @@
 __pycache__/
 .venv
 venv/
-checks.py
-bot.py
 logs/
 logs/infos.log
 infos.log
