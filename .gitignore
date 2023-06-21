@@ -1,9 +1,9 @@
-# Environments
+# Environments/files
 .env
 __pycache__/
 .venv
 venv/
 logs/
-logs/infos.log
-infos.log
 *.log
+lavalink/
+docker-compose.yml
