@@ -9,11 +9,11 @@ import utils
 
 logger = settings.logging.getLogger("bot")
 
-def is_certain_user():
-    def predicate(interaction : discord.Interaction):
-        if interaction.user.id == "_Uptown":
-            return True
-    return app_commands.check(predicate)
+# def is_certain_user():
+#     def predicate(interaction : discord.Interaction):
+#         if interaction.user.id == "_Uptown":
+#             return True
+#     return app_commands.check(predicate)
 
 def run():
     intents = discord.Intents.all()
@@ -33,9 +33,9 @@ def run():
             if cog_file.name != "__init__.py":
                 await bot.load_extension(f"cogs.{cog_file.name[:-3]}")
 
-        for slashcmd_file in settings.SLASH_DIR.glob("*.py"):
-            if slashcmd_file.name != "__init__.py":
-                await bot.load_extension(f"slashcmds.{slashcmd_file.name[:-3]}")
+        # for slashcmd_file in settings.SLASH_DIR.glob("*.py"):
+        #     if slashcmd_file.name != "__init__.py":
+        #         await bot.load_extension(f"slashcmds.{slashcmd_file.name[:-3]}")
 
         bot.tree.copy_global_to(guild=settings.GUILDS_ID)
         await bot.tree.sync(guild=settings.GUILDS_ID)

@@ -33,13 +33,18 @@ class SoundboardView(discord.ui.View):
             {
                 "label": "Rizz",
                 "custom_id": "Rizz",
-                "file_name": "",
+                "file_name": "https://www.youtube.com/watch?v=mq9VoNZdJqg",
             },
             {
                 "label": "Bass",
                 "custom_id": "Bass",
-                "file_name": "",
+                "file_name": "https://www.youtube.com/watch?v=f8mL0_4GeV0",
             },
+            {
+                "label": "Fart",
+                "custom_id": "Fart",
+                "file_name": "https://www.youtube.com/watch?v=ZQn8sQjTO0M",
+            }
         ]
         for buttonConfig in buttons:
             sb_button = SB_Button()
@@ -80,6 +85,7 @@ class MusicBot(commands.Cog):
         await self.music_channel.send(f"Finished: {track.title}")
         self.history.append(track.title)
 
+    #soundboard 
     @commands.command(brief="Opens a soundboard with buttons")
     async def sb(self, ctx):
         view = SoundboardView(timeout=None)
@@ -106,7 +112,6 @@ class MusicBot(commands.Cog):
         self.vc = await channel.disconnect(cls=wavelink.Player)
         await ctx.send(f"Connected to {channel.name}")
         
-
     @commands.command(brief="Search for a track from YT, SoundCloud, or Spotify")
     async def add(self, ctx, *title : str):
         #!search yt
@@ -144,6 +149,33 @@ class MusicBot(commands.Cog):
     async def stop(self, ctx):
         await self.vc.stop(self.current_track)
         await ctx.send(f"Stopped {self.current_track.title}")
+
+    @commands.command(brief="Fast Forward")
+    async def ff(self, ctx, seconds : int = 15):
+        new_position = self.vc.position + seconds
+        await self.vc.seek(new_position * 1000)
+
+    @commands.command(brief="Rewind")
+    async def rw(self, ctx, seconds : int = 15):
+        new_position = self.vc.position - seconds
+        await self.vc.seek(new_position * 1000)
+
+    @commands.command(brief="Set Volume")
+    async def volume(self, ctx, volume : int = 100):
+        await self.vc.set_volume(volume)
+
+    @commands.command(brief="Get Volume")
+    async def getvolume(self, ctx):
+        await ctx.send(f"Volume: {self.vc.volume}")
+    
+    @commands.command(brief="Shows song history")
+    async def history(self, ctx):
+        self.history.reverse()
+        embed = discord.Embed(title="Song History")
+        for song in self.history:
+            track_info = song.split(" - ")
+            embed.add_field(name=track_info[1], value=track_info[0], inline=False)
+        await ctx.send(embed=embed)
 
 async def setup(bot):
     music_bot = MusicBot(bot)

@@ -13,8 +13,6 @@ BASE_DIR = pathlib.Path(__file__).parent
 
 CMDS_DIR = BASE_DIR / "cmds"
 COGS_DIR = BASE_DIR / "cogs"
-SLASH_DIR = BASE_DIR / "slashcmds"
-
 
 VIDEOCMDS_DIR = BASE_DIR / "videocmds"
 
