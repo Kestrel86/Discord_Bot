@@ -2,7 +2,9 @@ import discord
 from discord.ext import commands 
 import settings 
 import wavelink
+import glob
 
+#reloading the py file will cause the bot to break and have to restart if still connected to vc
 
 logger = settings.logging.getLogger(__name__)
 
@@ -125,16 +127,22 @@ class MusicBot(commands.Cog):
         self.vc = await channel.connect(cls=wavelink.Player)
         await ctx.send(f"Joined {channel.name}")
 
-    @commands.command()
+    @commands.command() 
     async def play(self, ctx, *, search: wavelink.YouTubeTrack):
         if not self.vc:
             self.vc = await ctx.author.voice.channel.connect(cls=wavelink.Player)
-
         if self.vc.is_playing():
-
-            self.vc.queue.put(item=search)
+            self.vc.queue.put(search)
         else:
             await self.vc.play(search)
+
+    @commands.command(brief="add song to queue")
+    async def add(self, ctx, *title : str):
+        chosen_track = await wavelink.YouTubeTrack.search(query=" ".join(title), return_first=True)
+        if chosen_track:
+            self.current_track = chosen_track
+            await ctx.send(f"added {chosen_track.title} to queue")
+            self.vc.queue.put(chosen_track)
             
     @commands.command(brief="Skips the current song")
     async def skip(self, ctx):
